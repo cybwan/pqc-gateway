@@ -5,12 +5,12 @@ resources:
   spec:
     listeners:
       - port: 9443
-        protocol: HTTPS
+        protocol: TLS
         tls:
           mode: Terminate
           pqc:
             signature: ML-DSA-44
-            keyExchange: ML-KEM-768
+            keyExchange: X25519MLKEM768
           certificates:
             - tls.crt: a.b.example.com.crt
               tls.key: a.b.example.com.key
