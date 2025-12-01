@@ -168,13 +168,14 @@ make install
 ### 制作证书
 
 ```bash
-sudo mkdir /opt/certs
+sudo mkdir certs
 
 # 生成私钥
-openssl genpkey -algorithm ML-DSA-44 -out /opt/certs/gateway.example.com.key
+openssl genpkey -algorithm ML-DSA-44 -out certs/pqc.flomesh.io.key
+openssl genpkey -algorithm rsa -pkeyopt rsa_keygen_bits:2048 -out certs/pqc.flomesh.io.key
 # 生成证书签名请求 (CSR)
-openssl req -new -key /opt/certs/gateway.example.com.key -out /opt/certs/gateway.example.com.csr -subj "/C=CN/ST=Liaoning/L=Dalian/O=Flomesh/OU=OSS-PQC/CN=gateway.example.com"
-openssl x509 -req -in /opt/certs/gateway.example.com.csr -signkey /opt/certs/gateway.example.com.key -out /opt/certs/gateway.example.com.crt -days 365 -sha3-384
+openssl req -new -key certs/pqc.flomesh.io.key -out certs/pqc.flomesh.io.csr -subj "/C=CN/ST=Liaoning/L=Dalian/O=Flomesh/OU=OSS-PQC/CN=pqc.flomesh.io"
+openssl x509 -req -in certs/pqc.flomesh.io.csr -signkey certs/pqc.flomesh.io.key -out certs/pqc.flomesh.io.crt -days 365 -sha3-384
 ```
 
 ### 启动 FGW 服务
@@ -192,6 +193,7 @@ gw -c poc/demo/poc.gateway.config.yaml --debug
 ```bash
 curl -k --tlsv1.3 https://gateway.example.com:443//markets
 curl -k --tlsv1.3 https://gateway.example.com:443
+curl -k --tlsv1.3 https://pqc.flomesh.io:8443
 ```
 
 返回:
@@ -265,3 +267,7 @@ connection: keep-alive
 ```
 
 包含限速 429 状态码
+
+
+
+keyExchange: X25519MLKEM768:X25519:secp384r1:prime256v1
